@@ -32,6 +32,9 @@ void Select();
 void InitB();
 void addB();
 void removeB();
+void borrowB();
+void returnB();
+void InitS();
 void Initial()
 {
     system("cls");
@@ -107,7 +110,7 @@ void InitB(){
     printf("The number of book: ");
     scanf("%d",a0->bookn);
     a0->next=NULL;
-
+    a0->n=0;
     printf("The book initialize is finish!Press any key to continue...");
     getch();
     system("cls");
@@ -181,6 +184,94 @@ void removeB(){
 printf("Remove books is finish!Press any key to continue...\n");
 getch();
 system("cls");
+}
+void InitS(){
+     ST*b0;
+     int i;
+     b0=(ST*)malloc(sizeof(ST));
+     head_S=b0;
+     printf("Please input the information of students:\n");
+     printf("The student's ID number:\n");
+     scanf("%s",b0->stud_num);
+     prinf("The student's name:\n");
+     scanf("%s",b0->stud_nam);
+     for(i=0;i<MAX;i++){
+        strcpy(b0->borrow[i].borrow_num,"0");
+        strcpy(b0->borrow[i].borrow_fidate,"0");
+     }
+     b0->next=NULL;
+
+     printf("The module is finish!Press any key to continue...\n");
+     getch();
+     system("cls");
+
+}
+void borrowB(){
+    BK*c0;
+    ST*d0;
+    char book_RN[15];
+    char stud_N[15];
+    char limit_DA[15];
+    int t;
+    d0=head_S;
+    c0=head_B;
+    printf("Please input your ID number:\n");
+    scanf("%s",stud_N);
+    while(d0->next!=NULL&&strcmp(stud_N,)!=0){
+            d0=d0->next;
+    }
+    if(d0->next=NULL&&strcmp(stud_N,d0->stud_num)!=0){
+        printf("The ID  number is not exist!Press any key to continue...\n");
+        goto END;
+    }
+    printf("Please input the order number of books you want\n");
+    scanf("%s",book_RN);
+    while(c0->next!=NULL&&strcmp(book_RN,c0->book_num)!=0){
+        c0=c0->next;
+    }
+    if(c0->next=NULL&&strcmp(book_RN,c0->book_num)!=0){
+        printf("The book you want is not exit!Press any key to continue...\n");
+        goto END;
+    }
+    else if(c0->bookn<=0){
+        printf("The books have been borrowed out!Press any key to continue...\n");
+        goto END;
+    }
+    else if (d0->a>MAX||d0->a=MAX){
+        printf("The number of books you can borrow is already full!Press any key to continue...!\n");
+        goto END;
+    }
+    else if (strcmp(d0->borrow[0].borrow_num,book_RN)!=0){
+        for(t=0;t<=MAX;t++){
+            d0->a=t
+            if(strcmp(d0->borrow[t].borrow_num,book_RN)==0){
+                printf("You can not borrow two same books!\n");
+                goto END;
+            }
+            else if(strcmp(d0->borrow[t].borrow_num,"0")==0){
+                printf("Please input you return date:\n");
+                scanf("%s",limit_DA);
+                strcpy(d0->borrow[t].borrow_num,book_RN);
+                strcpy(d0->borrow[t].borrow_fidate,limit_DA);
+                c0->bookn--;
+                printf("The borrow module success!Press any to continue...\n");
+                goto END;
+
+
+            }
+
+
+        }
+    }
+    else{
+        printf("Please input you return date:\n");
+        scanf("%s",limit_DA);
+        strcpy(d0->borrow[d0->a].borrow_num,book_RN);
+        strcpy(d0->borrow[d0->a].borrow_fidate,limit_DA);
+        c0->bookn--;
+        goto END;
+    }
+END: getch();system("cls");
 }
 int main()
 {

@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<conio.h>
+#include<string.h>
 #define MAX 3
 
 typedef struct book{
@@ -22,7 +23,7 @@ typedef struct student{
     int a;
     int t;
     BT borrow[MAX];
-    struct stu*next;
+    struct student*next;
 }ST;
 BK*head_B;
 ST*head_S;
@@ -35,6 +36,8 @@ void removeB();
 void borrowB();
 void returnB();
 void InitS();
+void Sear_B();
+void Sear_T();
 void Initial()
 {
     system("cls");
@@ -116,8 +119,11 @@ void InitB(){
     system("cls");
     }
 void addB(){
-    BK*a,a0,a1;
-    a=a1=head_B;
+    BK*a;
+    BK*a0;
+    BK*a1;
+    a=head_B;
+    a1=head_B;
     printf("add new books module:\n");
     printf("Please input the information of books:\n");
     a0=(BK*)malloc(sizeof(BK));
@@ -129,7 +135,7 @@ void addB(){
     if(strcmp(a0->book_num,a1->book_num)==0){
             printf("The kind of book is already exists\n");
             printf("The number of the books:\n");
-            scanf("%d",a0->bookn)£»
+            scanf("%d",a0->bookn);
             a1->booko=a1->booko+a0->bookn;
 
     }
@@ -157,9 +163,12 @@ void addB(){
     system("cls");
 }
 void removeB(){
-    BK*a,a0,a1;
+    BK*a;
+    BK*a0;
+    BK*a1;
     int t;
-    a=a1=head_B;
+    a=head_B;
+    a1=head_B;
     printf("The order of book you want to remove is:");
     scanf("%s",a0->book_num);
     while(strcmp(a0->book_num,a1->book_num)!=0&&a1->book_num!=NULL){
@@ -193,7 +202,7 @@ void InitS(){
      printf("Please input the information of students:\n");
      printf("The student's ID number:\n");
      scanf("%s",b0->stud_num);
-     prinf("The student's name:\n");
+     printf("The student's name:\n");
      scanf("%s",b0->stud_nam);
      for(i=0;i<MAX;i++){
         strcpy(b0->borrow[i].borrow_num,"0");
@@ -217,10 +226,10 @@ void borrowB(){
     c0=head_B;
     printf("Please input your ID number:\n");
     scanf("%s",stud_N);
-    while(d0->next!=NULL&&strcmp(stud_N,)!=0){
+    while(d0->next!=NULL&&strcmp(stud_N,d0->stud_num)!=0){
             d0=d0->next;
     }
-    if(d0->next=NULL&&strcmp(stud_N,d0->stud_num)!=0){
+    if(d0->next==NULL&&strcmp(stud_N,d0->stud_num)!=0){
         printf("The ID  number is not exist!Press any key to continue...\n");
         goto END;
     }
@@ -229,7 +238,7 @@ void borrowB(){
     while(c0->next!=NULL&&strcmp(book_RN,c0->book_num)!=0){
         c0=c0->next;
     }
-    if(c0->next=NULL&&strcmp(book_RN,c0->book_num)!=0){
+    if(c0->next==NULL&&strcmp(book_RN,c0->book_num)!=0){
         printf("The book you want is not exit!Press any key to continue...\n");
         goto END;
     }
@@ -237,13 +246,13 @@ void borrowB(){
         printf("The books have been borrowed out!Press any key to continue...\n");
         goto END;
     }
-    else if (d0->a>MAX||d0->a=MAX){
+    else if (d0->a>MAX||d0->a==MAX){
         printf("The number of books you can borrow is already full!Press any key to continue...!\n");
         goto END;
     }
     else if (strcmp(d0->borrow[0].borrow_num,book_RN)!=0){
         for(t=0;t<=MAX;t++){
-            d0->a=t
+            d0->a=t;
             if(strcmp(d0->borrow[t].borrow_num,book_RN)==0){
                 printf("You can not borrow two same books!\n");
                 goto END;
@@ -272,6 +281,58 @@ void borrowB(){
         goto END;
     }
 END: getch();system("cls");
+}
+void returnB(){
+    BK*c0;
+    ST*d0;
+    char stud_N[15];
+    char book_RN[15];
+    c0=head_B;
+    d0=head_S;
+    int t=0;
+    int x,y;
+    printf("Return book module....\n");
+    printf("please input your ID number:\n");
+    scanf("%s",stud_N);
+    while(d0->next!=NULL&&strcmp(stud_N,d0->stud_num)!=0){
+        d0=d0->next;
+    }
+    if(d0->next==NULL&&strcmp(stud_N,d0->stud_nam)!=0){
+        printf("The ID number is not exist!Press any key to continue...\n");
+        t=1;
+        goto end;
+    }
+    printf("Please input the order number of books you want to return...\n");
+    scanf("%s",book_RN);
+    while(c0->next!=NULL&&strcmp(book_RN,c0->book_num)!=0){
+        c0=c0->next;
+    }
+    if(c0->next==NULL&&strcmp(book_RN,c0->book_num)!=0){
+        printf("The order number of books you want to return is not exist!Press any key to continue...\n");
+        t=1;
+        goto end;
+    }
+    for(x=0;x<MAX;x++){
+        if(strcmp(book_RN,d0->borrow[x].borrow_num)==0){
+                t=2;
+                y=x;
+                for(y;y<MAX-1;y++){
+                    strcpy(d0->borrow[y].borrow_num,d0->borrow[y+1].borrow_num);
+                    strcpy(d0->borrow[y].borrow_fidate,d0->borrow[y+1].borrow_fidate);
+                }
+                strcpy(d0->borrow[MAX-1].borrow_num,"0");
+                strcpy(d0->borrow[MAX-1].borrow_fidate,"0");
+                c0->bookn++;
+                printf("The return book module is finished!\n");
+                goto end;
+        }
+    }
+        if(t=0){
+            printf("You don't borrow this book!\n");
+
+        }
+        end: getch();system("cls");
+
 }
 int main()
 {

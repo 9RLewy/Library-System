@@ -334,6 +334,83 @@ void returnB(){
         end: getch();system("cls");
 
 }
+void Sear_B(){
+    BK*c0;
+    char book[15];
+    c0=head_B;
+    int t;
+    printf("Input 1 if you want to search one book's information,input 2 if you want to list all information of books:\n");
+    scanf("%d",t);
+    if(t==1){
+    printf("Please input the order of book you want to find:\n");
+    scanf("%s",book);
+    for(;;){
+        if(strcmp(c0->book_num,book)==0){
+            printf("There are the information of the book you want:\n");
+            printf("%s\t%s\t%s\t%d\n",c0->book_num,c0->book_nam,c0->book_writer,c0->bookn);
+            goto lewy;
+        }else{
+            c0=c0->next;
+        }
+    }
+    }else if(t==2){
+        printf("These are the all books information:\n");
+        while(c0->next!=NULL){
+            printf("%s\t%s\t%s\t%d\n\n",c0->book_num,c0->book_nam,c0->book_writer,c0->bookn);
+        }
+        goto lewy;
+    }
+    lewy:
+        printf("The module is finish!Press any key to continue...\n");
+        getch();system("cls");
+}
+void Sear_T(){
+    ST*d0;
+    char stud[15];
+    int t;
+    d0=head_S;
+    printf("Input 1 if you want to find one student's information,input 2 if you want to find all students information:\n");
+    scanf("%d",t);
+    if(t==1){
+        printf("Please input the number of student you want to find:\n");
+        scanf("%s",stud);
+        for(;;){
+            if(strcmp(stud,d0->stud_num)==0){
+                printf("The information of the student is:\n");
+                printf("The number and name of the student:\n");
+                printf("%s\t\t%s:\n\n",d0->stud_num,d0->stud_nam);
+                for(t=0;t<MAX;t++){
+                printf("order number     limit date\n");
+                printf("%s\t",d0->borrow[t].borrow_num);
+                printf("%s\n",d0->borrow[t].borrow_fidate);
+                }
+                printf("------------------------\n");
+            }else{
+                d0=d0->next;
+
+            }
+            goto robert;
+            }
+    }else if(t==2){
+        printf("These are all information of students:\n");
+        while(d0->next!=NULL){
+                printf("The information of the student is:\n");
+                printf("The number and name of the student:\n");
+                printf("%s\t\t%s:\n\n",d0->stud_num,d0->stud_nam);
+                for(t=0;t<MAX;t++){
+                printf("order number     limit date\n");
+                printf("%s\t",d0->borrow[t].borrow_num);
+                printf("%s\n",d0->borrow[t].borrow_fidate);
+                }
+                printf("------------------------\n");
+        }
+        goto robert;
+    }
+    robert:
+        printf("The module is finish!\n");
+        getch();
+        system("cls");
+}
 int main()
 {
     Initial();

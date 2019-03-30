@@ -38,6 +38,12 @@ void returnB();
 void InitS();
 void Sear_B();
 void Sear_T();
+void SaveBO();
+void SaveST();
+void loadBO();
+void loadST();
+
+
 void Initial()
 {
     system("cls");
@@ -410,6 +416,82 @@ void Sear_T(){
         printf("The module is finish!\n");
         getch();
         system("cls");
+}
+void SaveBO(){
+    FILE*fp1;
+    BK*p0,p1;
+    p0=head_B;
+    if((fp1=fopen("Book.txt","wb"))==NULL){
+        printf("Can not open the file!\n");
+        exit(0);
+    }
+    while(p0!=NULL){
+        if(fwrite(p0,sizeof(BK),1,fp1)!=1){
+            printf("File write error!\n");}
+            p0=p1;
+            p0=p0->next;
+            free(p1);
+            }
+            head_B=NULL;
+            fclose(fp1);
+
+}
+void SaveST(){
+    FILE*fp2;
+    ST*p0,p1;
+    if((fp2=open("Student.txt","wb"))==NULL){
+        printf("Can not open the file!\n");
+        exit(0);
+    }
+    while(p0!=NULL){
+        if(fwrite(p0,sizeof(ST),1,fp2)!=1){
+            printf("File write error!\n");}
+            p0=p1;
+            p0=p0->next;
+            free(p1);
+    }
+}
+void loadBO(){
+    FILE*fp3;
+    BK*p0,p1;
+    if(fp=fpoen("Book.txt","rb")==NULL){
+        printf("Cannot open the file!\n");
+        exit(0);
+    }
+
+    p0=(BK*)malloc(sizeof(BK*));
+    fread(p0,sizeof(BK),1,fp3);
+    head_B=p0=p1;
+    while(!feof(fp3)){
+            p0=(BK*)malloc(sizeof(BK*));
+            fread(p0,sizeof(BK),1,fp3);
+            p1->next=p0;
+            p1=p0;
+    }
+    p1->next=NULL;
+    free(p1);
+    fclose(fp3);
+}
+void loadST(){
+    FILE*fp4;
+    ST*p0,p1;
+        if(fp=fpoen("Student.txt","rb")==NULL){
+        printf("Cannot open the file!\n");
+        exit(0);
+    }
+
+    p0=(ST*)malloc(sizeof(ST*));
+    fread(p0,sizeof(BK),1,fp3);
+    head_B=p0=p1;
+    while(!feof(fp3)){
+            p0=(BK*)malloc(sizeof(BK*));
+            fread(p0,sizeof(BK),1,fp3);
+            p1->next=p0;
+            p1=p0;
+    }
+    p1->next=NULL;
+    free(p1);
+    fclose(fp4);
 }
 int main()
 {

@@ -2,10 +2,11 @@
 #include<stdlib.h>
 #include<conio.h>
 #include<string.h>
+#include<process.h>
 #define MAX 3
 
 typedef struct book{
-    char book_num[10];
+    char book_num[15];
     char book_nam[20];
     char book_writer[20];
     int bookn;
@@ -14,20 +15,26 @@ typedef struct book{
     struct book*next;
     }BK;
 typedef struct borrow{
-     char borrow_num[10];
+     char borrow_num[15];
      char borrow_fidate[15];
      }BT;
 typedef struct student{
-    char  stud_num[10];
+    char  stud_num[15];
     char  stud_nam[15];
     int a;
     int t;
     BT borrow[MAX];
     struct student*next;
 }ST;
+struct manger{
+   char man_num[15];
+   char man_nam[15];
+}MA;
 BK*head_B;
 ST*head_S;
+
 void Initial();
+void InitM();
 int menu();
 void Select();
 void InitB();
@@ -61,20 +68,21 @@ int menu()
     int a;
     printf("\n\n\tMain Menu of the system\n");
     printf("=========================================\n");
-    printf("*\t1---Book Initialization           \n");
-    printf("*\t2---Student Initialization        \n");
-    printf("*\t3---Book Borrowing                \n");
-    printf("*\t4---Book Returning                \n");
-    printf("*\t5---Check Books Information       \n");
-    printf("*\t6---Check Students Information    \n");
-    printf("*\t7---Exit                          \n");
+    printf("*\t1---Student Initialization           \n");
+    printf("*\t2---Add books                        \n");
+    printf("*\t3---Remove boooks                    \n");
+    printf("*\t4--- Check Books Information         \n");
+    printf("*\t5--- Check Students Information      \n");
+    printf("*\t6--- Book Borrowing                  \n");
+    printf("*\t7--- Book Returning                  \n");
+    printf("*\t8---Exit                             \n");
     printf("=========================================\n");
     printf("Please input the number:");
     for(;;)
     {
         scanf("%d",&a);
-        if(a<1||a>7)
-            printf("error!Please input again!");
+        if(a<1||a>8)
+            printf("error!Please input again!\n");
         else
             break;
     }
@@ -86,13 +94,14 @@ void Select()
     {
         switch(menu())
         {
-            case 1:printf("1");break;
-            case 2:printf("2");break;
-            case 3:printf("3");break;
-            case 4:printf("4");break;
-            case 5:printf("5");break;
-            case 6:printf("6");break;
-            case 7:
+            case 1:InitS();break;
+            case 2:addB();break;
+            case 3:removeB();break;
+            case 4:Sear_B();break;
+            case 5:Sear_T();break;
+            case 6:borrowB();break;
+            case 7:returnB();break;
+            case 8:
                 system("cls");
                 printf("The data was saved successful!\n");
                 printf("Welcome to use this system next time!\n");
@@ -104,26 +113,81 @@ void Select()
 
     }
 }
+void InitM(){
+    printf("Manager initialize begin:\n");
+    printf("Please sign the manager's information:\n");
+    printf("Please input manager's number:\n");
+    scanf("%s",MA.man_num);
+    printf("Please input the manager's name:\n");
+    scanf("%s",MA.man_nam);
+    printf("The manager initialize module is finish!Press any key to continue...\n");
+    getch();
+    system("cls");
+}
 void InitB(){
     BK*a0;
-    printf("Book initialize begin:");
+    printf("Book initialize begin:\n");
     a0=(BK*)malloc(sizeof(BK));
     head_B=a0;
-    printf("Please input the information of books:");
-    printf("The order number of book:");
+    printf("Please input the information of books:\n");
+    printf("The order number of book:\n");
     scanf("%s",a0->book_num);
-    printf("The name of book:");
+    printf("The name of book:\n");
     scanf("%s",a0->book_nam);
-    printf("The writer name of book:");
+    printf("The writer name of book:\n");
     scanf("%s",a0->book_writer);
-    printf("The number of book: ");
-    scanf("%d",a0->bookn);
+    printf("The number of book: \n");
+    scanf("%d",&a0->bookn);
+    printf("The book initialize is finish!Press any key to continue...\n");
     a0->next=NULL;
     a0->n=0;
-    printf("The book initialize is finish!Press any key to continue...");
     getch();
     system("cls");
     }
+void addS(){
+    ST*a;
+    ST*a0;
+    ST*a1;
+    a=head_S;
+    a1=head_S;
+    int i;
+    printf("Add students information:\n");
+    a0=(ST*)malloc(sizeof(ST));
+    printf("Please input the student's ID number:\n");
+    scanf("%s",a0->stud_num);
+
+    while(strcmp(a0->stud_num,a1->stud_num)!=0&&a1->next!=NULL){
+        a1=a1->next;
+    }
+    if(strcmp(a0->stud_num,a1->stud_num)==0){
+        printf("The student has registered!\n");
+        goto RL;
+    }
+    else{
+        printf("Please input the information of students:\n");
+        printf("The student's ID number:\n");
+        scanf("%s",a0->stud_num);
+        printf("The student's name:\n");
+        scanf("%s",a0->stud_nam);
+        for(i=0;i<MAX;i++){
+        strcpy(a0->borrow[i].borrow_num,"0");
+        strcpy(a0->borrow[i].borrow_fidate,"0");
+        }
+        while(a->next!=NULL){
+            a=a->next;
+        }if(head_S==NULL){
+            head_S=a0;
+        }else{
+             a->next=a0;
+             a0->next=NULL;
+        }
+
+    }
+    RL:
+        printf("The register finish!\n");
+        getch();
+        system("cls");
+}
 void addB(){
     BK*a;
     BK*a0;
@@ -135,14 +199,14 @@ void addB(){
     a0=(BK*)malloc(sizeof(BK));
     printf("Please input the book's order number:\n");
     scanf("%s",a0->book_num);
-    while(strcmp(a0->book_num,a1->book_num)!=0&&a1->book_num!=NULL){
+    while(strcmp(a0->book_num,a1->book_num)!=0&&a1->next!=NULL){
         a1=a1->next;
     }
     if(strcmp(a0->book_num,a1->book_num)==0){
-            printf("The kind of book is already exists\n");
+            printf("The kind of book already exists\n");
             printf("The number of the books:\n");
-            scanf("%d",a0->bookn);
-            a1->booko=a1->booko+a0->bookn;
+            scanf("%d",&a0->bookn);
+            a1->bookn=a1->bookn+a0->bookn;
 
     }
     else{
@@ -151,10 +215,10 @@ void addB(){
             printf("The writer of the book:\n");
             scanf("%s",a0->book_writer);
             printf("The number of books is:\n");
-            printf("%d",a0->bookn);
+            scanf("%d",&a0->bookn);
             while(a->next!=NULL){
             a=a->next;}
-            if(head_B=NULL){
+            if(head_B==NULL){
                 head_B=a0;
             }
             else{
@@ -175,20 +239,20 @@ void removeB(){
     int t;
     a=head_B;
     a1=head_B;
-    printf("The order of book you want to remove is:");
+    printf("The order of book you want to remove is:\n");
     scanf("%s",a0->book_num);
-    while(strcmp(a0->book_num,a1->book_num)!=0&&a1->book_num!=NULL){
+    while(strcmp(a0->book_num,a1->book_num)!=0&&a1->next!=NULL){
         a=a1;
         a1=a1->next;
     }
     if(strcmp(a0->book_num,a1->book_num)==0){
-            printf("The number of this kind of books you want to remove:");
-            scanf("%d",t);
+            printf("The number of this kind of books you want to remove:\n");
+            scanf("%d",&t);
             if(t<=a1->bookn){
                 a1->bookn=a1->bookn-t;
             }
             else{
-                printf("You want to remove this kind of books:");
+                printf("You want to remove this kind of books:\n");
                 a->next=a1->next;
                 free(a1);
             }
@@ -346,23 +410,24 @@ void Sear_B(){
     c0=head_B;
     int t;
     printf("Input 1 if you want to search one book's information,input 2 if you want to list all information of books:\n");
-    scanf("%d",t);
+    scanf("%d",&t);
     if(t==1){
-    printf("Please input the order of book you want to find:\n");
-    scanf("%s",book);
-    for(;;){
-        if(strcmp(c0->book_num,book)==0){
-            printf("There are the information of the book you want:\n");
-            printf("%s\t%s\t%s\t%d\n",c0->book_num,c0->book_nam,c0->book_writer,c0->bookn);
-            goto lewy;
-        }else{
-            c0=c0->next;
+        printf("Please input the order of book you want to find:\n");
+        scanf("%s",book);
+        while(c0!=NULL){
+            if(strcmp(c0->book_num,book)==0){
+                printf("There are the information of the book you want:\n");
+                printf("%s\t%s\t%s\t%d\n",c0->book_num,c0->book_nam,c0->book_writer,c0->bookn);
+                goto lewy;
+            }else{
+                c0=c0->next;
+            }
         }
-    }
     }else if(t==2){
-        printf("These are the all books information:\n");
-        while(c0->next!=NULL){
+        printf("These are the all books' information:\n");
+        while(c0!=NULL){
             printf("%s\t%s\t%s\t%d\n\n",c0->book_num,c0->book_nam,c0->book_writer,c0->bookn);
+            c0=c0->next;
         }
         goto lewy;
     }
@@ -376,7 +441,7 @@ void Sear_T(){
     int t;
     d0=head_S;
     printf("Input 1 if you want to find one student's information,input 2 if you want to find all students information:\n");
-    scanf("%d",t);
+    scanf("%d",&t);
     if(t==1){
         printf("Please input the number of student you want to find:\n");
         scanf("%s",stud);
@@ -399,7 +464,7 @@ void Sear_T(){
             }
     }else if(t==2){
         printf("These are all information of students:\n");
-        while(d0->next!=NULL){
+        while(d0!=NULL){
                 printf("The information of the student is:\n");
                 printf("The number and name of the student:\n");
                 printf("%s\t\t%s:\n\n",d0->stud_num,d0->stud_nam);
@@ -409,6 +474,7 @@ void Sear_T(){
                 printf("%s\n",d0->borrow[t].borrow_fidate);
                 }
                 printf("------------------------\n");
+                d0=d0->next;
         }
         goto robert;
     }
@@ -419,7 +485,8 @@ void Sear_T(){
 }
 void SaveBO(){
     FILE*fp1;
-    BK*p0,p1;
+    BK*p0;
+    BK*p1;
     p0=head_B;
     if((fp1=fopen("Book.txt","wb"))==NULL){
         printf("Can not open the file!\n");
@@ -428,7 +495,7 @@ void SaveBO(){
     while(p0!=NULL){
         if(fwrite(p0,sizeof(BK),1,fp1)!=1){
             printf("File write error!\n");}
-            p0=p1;
+            p1=p0;
             p0=p0->next;
             free(p1);
             }
@@ -438,23 +505,25 @@ void SaveBO(){
 }
 void SaveST(){
     FILE*fp2;
-    ST*p0,p1;
-    if((fp2=open("Student.txt","wb"))==NULL){
+    ST*p0;
+    ST*p1;
+    if((fp2=fopen("Student.txt","wb"))==NULL){
         printf("Can not open the file!\n");
         exit(0);
     }
     while(p0!=NULL){
         if(fwrite(p0,sizeof(ST),1,fp2)!=1){
             printf("File write error!\n");}
-            p0=p1;
+            p1=p0;
             p0=p0->next;
             free(p1);
     }
 }
 void loadBO(){
     FILE*fp3;
-    BK*p0,p1;
-    if(fp=fpoen("Book.txt","rb")==NULL){
+    BK*p0;
+    BK*p1;
+    if((fp3=fopen("Book.txt","rb"))==NULL){
         printf("Cannot open the file!\n");
         exit(0);
     }
@@ -474,18 +543,19 @@ void loadBO(){
 }
 void loadST(){
     FILE*fp4;
-    ST*p0,p1;
-        if(fp=fpoen("Student.txt","rb")==NULL){
+    ST*p0;
+    ST*p1;
+        if((fp4=fopen("Student.txt","rb"))==NULL){
         printf("Cannot open the file!\n");
         exit(0);
     }
 
     p0=(ST*)malloc(sizeof(ST*));
-    fread(p0,sizeof(BK),1,fp3);
-    head_B=p0=p1;
-    while(!feof(fp3)){
-            p0=(BK*)malloc(sizeof(BK*));
-            fread(p0,sizeof(BK),1,fp3);
+    fread(p0,sizeof(BK),1,fp4);
+    head_S=p0=p1;
+    while(!feof(fp4)){
+            p0=(ST*)malloc(sizeof(ST*));
+            fread(p0,sizeof(BK),1,fp4);
             p1->next=p0;
             p1=p0;
     }
@@ -495,8 +565,9 @@ void loadST(){
 }
 int main()
 {
-    Initial();
+  Initial();
+  InitB();
+  Select();
 
-    Select();
 }
 

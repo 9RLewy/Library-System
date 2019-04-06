@@ -33,6 +33,7 @@ struct manger{
 BK*head_B;
 ST*head_S;
 
+void addS();
 void Initial();
 void InitM();
 int menu();
@@ -94,7 +95,7 @@ void Select()
     {
         switch(menu())
         {
-            case 1:InitS();break;
+            case 1:addS();break;
             case 2:addB();break;
             case 3:removeB();break;
             case 4:Sear_B();break;
@@ -267,6 +268,7 @@ system("cls");
 void InitS(){
      ST*b0;
      int i;
+     int a=0;
      b0=(ST*)malloc(sizeof(ST));
      head_S=b0;
      printf("Please input the information of students:\n");
@@ -367,7 +369,7 @@ void returnB(){
     while(d0->next!=NULL&&strcmp(stud_N,d0->stud_num)!=0){
         d0=d0->next;
     }
-    if(d0->next==NULL&&strcmp(stud_N,d0->stud_nam)!=0){
+    if(d0->next==NULL&&strcmp(stud_N,d0->stud_num)!=0){
         printf("The ID number is not exist!Press any key to continue...\n");
         t=1;
         goto end;
@@ -567,6 +569,7 @@ int main()
 {
   Initial();
   InitB();
+  InitS();
   Select();
 
 }

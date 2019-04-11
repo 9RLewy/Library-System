@@ -12,18 +12,20 @@ typedef struct book{
     struct book*next;
     }BK;
 
-typedef struct student{
-    char  stud_num[15];
-    char  stud_nam[15];
-    int a;
-    int t;
-    struct student*next;
-}ST;
-
 typedef struct borrow{
      char borrow_num[15];
      char borrow_fidate[15];
      }BT;
+
+typedef struct student{
+    char  stud_num[15];
+    char  stud_nam[15];
+    int a;
+    BT borrow[2];
+    struct student*next;
+}ST;
+
+
  struct manger{
    char man_num[15];
    char man_nam[15];
@@ -32,8 +34,11 @@ typedef struct borrow{
 BK*head_B;
 ST*head_S;
 int z;
+int l=0;
 char v[15];
 
+
+void listB();
 void Start();
 void addS();
 void Initial();
@@ -44,6 +49,7 @@ void Select1();
 int menu2();
 void Select2();
 
+void Sear_S();
 void checB();
 void InitB();
 void addB();
@@ -52,7 +58,6 @@ void borrowB();
 void returnB();
 void InitS();
 void Sear_B();
-void Sear_T();
 void SaveBO();
 void SaveST();
 void loadBO();
@@ -134,7 +139,7 @@ void Select2()
             case 1:addB();break;
             case 2:removeB();break;
             case 3:Sear_B();break;
-            case 4:break;
+            case 4:Sear_S();break;
             case 5:
                 system("cls");
                 printf("exit or Change your identity?\n");
@@ -165,7 +170,7 @@ int menu1()
     printf("\n\n\tMain Menu of the system(Student)\n");
     printf("=========================================\n");
     printf("*\t0---Check all books information       \n");
-    printf("*\t1---Add student                      \n");
+    printf("*\t1---Add student(register)                      \n");
     printf("*\t2--- Book Borrowing                  \n");
     printf("*\t3--- Book Returning                  \n");
     printf("*\t4---Exit                             \n");
@@ -174,7 +179,7 @@ int menu1()
     for(;;)
     {
         scanf("%d",&a);
-        if(a<1||a>4)
+        if(a<0||a>4)
             printf("error!Please input again!\n");
         else
             break;
@@ -187,10 +192,10 @@ void Select1()
     {
         switch(menu1())
         {
-            case 0:break;
+            case 0:listB();break;
             case 1:addS();break;
-            case 2:break;
-            case 3:break;
+            case 2:borrowB();break;
+            case 3:returnB();break;
             case 4:
                 Q:
                 system("cls");
@@ -274,6 +279,11 @@ void InitS(){
      printf("The student's name:\n");
      scanf("%s",b0->stud_nam);
      b0->next=NULL;
+     b0->a=0;
+     strcpy(b0->borrow[0].borrow_fidate,"NULL");
+     strcpy(b0->borrow[0].borrow_num,"NULL");
+     strcpy(b0->borrow[1].borrow_fidate,"NULL");
+     strcpy(b0->borrow[1].borrow_num,"NULL");
 
      printf("The module is finish!Press any key to continue...\n");
      getch();
@@ -282,10 +292,8 @@ void InitS(){
 }
 
 void addB(){
-    BK*a;
     BK*a0;
     BK*a1;
-    a=head_B;
     a1=head_B;
     printf("add new books module:\n");
     printf("Please input the information of books:\n");
@@ -309,11 +317,8 @@ void addB(){
             scanf("%s",a0->book_writer);
             printf("The number of books is:\n");
             scanf("%d",&a0->bookn);
-            while(a->next!=NULL){
-                a=a->next;
-            }
-                a->next=a0;
-                a0->next=NULL;
+            a1->next=a0;
+            a0->next=NULL;
 
             }
 
@@ -330,6 +335,7 @@ void removeB(){
     int w;
     a=head_B;
     a1=head_B;
+    a0=(BK*)malloc(sizeof(BK));
     printf("The order of book you want to remove is:\n");
     scanf("%s",a0->book_num);
     while(strcmp(a0->book_num,a1->book_num)!=0&&a1->next!=NULL){
@@ -337,13 +343,14 @@ void removeB(){
         a1=a1->next;
     }
     if(strcmp(a0->book_num,a1->book_num)==0){
+            E:
             printf("The number of this kind of books you want to remove:\n");
             scanf("%d",&t);
             if(t<=a1->bookn){
                 a1->bookn=a1->bookn-t;
             }
             else{
-                E:
+
                 printf("You want to remove this kind of books?\n");
                 printf("1.yes  2.no");
                 scanf("%d",&w);
@@ -363,10 +370,8 @@ getch();
 system("cls");
 }
 void addS(){
-    ST*a;
     ST*a0;
     ST*a1;
-    a=head_S;
     a1=head_S;
     int i;
     printf("Add students information:\n");
@@ -387,10 +392,12 @@ void addS(){
         scanf("%s",a0->stud_num);
         printf("The student's name:\n");
         scanf("%s",a0->stud_nam);
-        while(a->next!=NULL){
-            a=a->next;
-        }
-             a->next=a0;
+        a0->a=0;
+        strcpy(a0->borrow[0].borrow_fidate,"NULL");
+        strcpy(a0->borrow[0].borrow_num,"NULL");
+        strcpy(a0->borrow[1].borrow_fidate,"NULL");
+        strcpy(a0->borrow[1].borrow_num,"NULL");
+             a1->next=a0;
              a0->next=NULL;
         }
 
@@ -405,6 +412,7 @@ void Sear_B(){
     char book[15];
     c0=head_B;
     int t;
+    int z=1;
     printf("Input 1 if you want to search one book's information,input 2 if you want to list all information of books:\n");
     scanf("%d",&t);
     if(t==1){
@@ -423,9 +431,17 @@ void Sear_B(){
     }else if(t==2){
         printf("These are the all books' information:\n");
         while(c0!=NULL){
+            if(z==1){
             printf("Order number   Name   Writer   Number \n");
-            printf("%s\t       %s\t %s\t  %d\n\n",c0->book_num,c0->book_nam,c0->book_writer,c0->bookn);
+            printf("%s\t       %s\t %s\t  %d\n",c0->book_num,c0->book_nam,c0->book_writer,c0->bookn);
+            printf("- - - - - - - - - - - - - - - - - - - - - - -\n");
             c0=c0->next;
+            z=z+1;
+            }else{
+                printf("%s\t       %s\t %s\t  %d\n",c0->book_num,c0->book_nam,c0->book_writer,c0->bookn);
+                printf("- - - - - - - - - - - - - - - - - - - - - - -\n");
+                c0=c0->next;
+            }
         }
         goto lewy;
     }
@@ -433,9 +449,176 @@ void Sear_B(){
         printf("The module is finish!Press any key to continue...\n");
         getch();system("cls");
 }
+void listB(){
+    BK*c0;
+    c0=head_B;
+    int z=1;
+    printf("These are all books' information:\n");
+           while(c0!=NULL){
+            if(z==1){
+            printf("Order number   Name   Writer   Number \n");
+            printf("%s\t       %s\t %s\t  %d\n",c0->book_num,c0->book_nam,c0->book_writer,c0->bookn);
+            printf("- - - - - - - - - - - - - - - - - - - - - - -\n");
+            c0=c0->next;
+            z=z+1;
+            }else{
+                printf("%s\t       %s\t %s\t  %d\n",c0->book_num,c0->book_nam,c0->book_writer,c0->bookn);
+                printf("- - - - - - - - - - - - - - - - - - - - - - -\n");
+                c0=c0->next;
+            }
+        }
+    printf("The module is finish!Press any key to continue...\n");
+    getch();
+    system("cls");
 
+
+}
+void borrowB(){
+    BK*a0;
+    ST*b0;
+    b0=head_S;
+    a0=head_B;
+    char stud[15];
+    char book[15];
+    char date[15];
+    printf("The borrow module start:\n");
+    printf("Please input your ID  number:\n");
+    scanf("%s",stud);
+    while(strcmp(b0->stud_num,stud)!=0&&b0->next!=NULL){
+        b0=b0->next;
+    }
+    if(strcmp(b0->stud_num,stud)==0){
+            if(b0->a<2){
+            printf("please input the order number of books you want:\n");
+            scanf("%s",book);
+            while(strcmp(a0->book_num,book)!=0&&a0->next!=NULL){
+                a0=a0->next;
+            }
+            if(strcmp(a0->book_num,book)==0){
+
+                    printf("please input the date you want to return:\n");
+                    scanf("%s",date);
+                    strcpy(b0->borrow[b0->a].borrow_num,book);
+                    strcpy(b0->borrow[b0->a].borrow_fidate,date);
+                    a0->bookn=a0->bookn-1;
+                    b0->a=b0->a+1;
+                    goto Z;
+
+
+            }else{
+                printf("The book you want is not exit!");
+                goto Z;
+
+            }
+
+        }else{
+            printf("The number of the student can borrow is 0!\n");
+            goto Z;
+
+             }
+    }else{
+        printf("The student is not exit!\n");
+        goto Z;
+    }
+
+
+
+ Z:
+        printf("The borrow module is finish!Press any key to continue...\n ");
+        getch();
+        system("cls");
+}
+void returnB(){
+    BK*a0;
+    ST*b0;
+    b0=head_S;
+    a0=head_B;
+    char stud[15];
+    char book[15];
+    char date[15];
+    printf("The return start:\n");
+    printf("Please input your ID  number:\n");
+    scanf("%s",stud);
+    while(strcmp(b0->stud_num,stud)!=0&&b0->next!=NULL){
+        b0=b0->next;
+    }
+    if(strcmp(b0->stud_num,stud)==0){
+        printf("please input the order number of books you want:\n");
+        scanf("%s",book);
+        while(strcmp(a0->book_num,book)!=0&&a0->next!=NULL){
+            a0=a0->next;
+        }
+         if(strcmp(a0->book_num,book)==0){
+                a0->bookn=a0->bookn+1;
+                if(strcmp(b0->borrow[0].borrow_num,a0->book_num)==0){
+                    strcpy(b0->borrow[0].borrow_num,b0->borrow[1].borrow_num);
+                    strcpy(b0->borrow[0].borrow_fidate,b0->borrow[1].borrow_fidate);
+                    strcpy(b0->borrow[1].borrow_num,"NULL");
+                    strcpy(b0->borrow[1].borrow_fidate,"NULL");
+                    b0->a=b0->a-1;
+                }else{
+                    strcpy(b0->borrow[1].borrow_num,"NULL");
+                    strcpy(b0->borrow[1].borrow_fidate,"NULL");
+                    b0->a=b0->a-1;
+                }
+
+         }else{
+                printf("The book you want is not exit!");
+                goto T;
+
+         }
+
+
+
+
+    }else{
+        printf("The student is not exit!\n");
+        goto T;
+    }
+
+    T:
+        printf("The return module is finish!Press any key to continue...\n");
+        getch();
+        system("cls");
+}
+void Sear_S(){
+    ST*a0;
+    a0=head_S;
+    char stud[15];
+    int t;
+    printf("Input 1 if you want to search one student's information,input 2 if you want to list all students' information:\n");
+    scanf("%d",&t);
+    if(t==1){
+        printf("Please input the ID number of student you want to find\n");
+        scanf("%s",stud);
+        while(a0!=NULL){
+            if(strcmp(a0->stud_num,stud)==0){
+                printf("%s\t\t%s\t\t\n",a0->stud_num,a0->stud_nam);
+                printf("Book1:     %s\t\t%s\t\t\n",a0->borrow[0].borrow_num,a0->borrow[0].borrow_fidate);
+                printf("Book2:     %s\t\t%s\t\t\n",a0->borrow[1].borrow_num,a0->borrow[1].borrow_fidate);
+                printf("----------------------------------------------\n");
+            }else{
+                a0=a0->next;
+            }
+        }
+    }else if(t==2){
+        printf("These are all students' information:\n");
+        while(a0!=NULL){
+            printf("%s\t\t%s\t\t\n",a0->stud_num,a0->stud_nam);
+            printf("Book1:     %s\t\t%s\t\t\n",a0->borrow[0].borrow_num,a0->borrow[0].borrow_fidate);
+            printf("Book2:     %s\t\t%s\t\t\n",a0->borrow[1].borrow_num,a0->borrow[1].borrow_fidate);
+            printf("----------------------------------------------\n");
+            a0=a0->next;
+        }
+
+    }
+    printf("The module is finish!Press any key to continue...\n");
+    getch();
+    system("cls");
+}
 int main(){
-  InitB();
-  Select2();
+  Initial();
+  Start();
   role();
+
 }

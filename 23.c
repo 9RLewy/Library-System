@@ -1,8 +1,8 @@
-#include<stdio.h>
-#include<stdlib.h>//system();exit();
+#include<stdio.h>//basic functions or FILE
+#include<stdlib.h>//system();exit();free();malloc()
 #include<conio.h>//getch();
-#include<string.h>//strcmp();
-#include<io.h>
+#include<string.h>//strcmp();strcpy();
+#include<io.h>//access
 
 
 typedef struct book{
@@ -37,33 +37,32 @@ ST*head_S;// two head node
 int z;//list book
 char v[15];//input the password when goto manager menu
 
+//six module
 
-
-//initial module
+//initialization module
 void Initial();
-void InitM();
-void InitS();
-void InitB();
-//Start and End
+void InitM();//initial manager
+void InitS();//initial student
+void InitB();//initial books
+//Start and End module
 void Start();
 void Exit();
-//select menu
+//Menu module:select module
 void role();
 void menu1();
 void menu2();
-// manager menu
+// Manager module:manager menu
 void ChecM();
 void addB();
 void removeB();
 void Sear_S();
 void Sear_B();
-void checB();
-//student menu
+//Student module:student menu
 void listB();
 void addS();
 void borrowB();
 void returnB();
-//File
+//File module:
 void writF();
 void readF();
 void check();
@@ -91,7 +90,7 @@ void Exit(){
     system("cls");
 
 }
-//select menu
+//select menu:student or manager
 void role(){
     int a;
     T:
@@ -350,20 +349,19 @@ void addB(){
 }
 void removeB(){
     BK*a;
-    BK*a0;
     BK*a1;
+    char bo[15];
     int t;
     int w;
     a=head_B;
     a1=head_B;
-    a0=(BK*)malloc(sizeof(BK));
     printf("The order of book you want to remove is:\n");
-    scanf("%s",a0->book_num);
-    while(strcmp(a0->book_num,a1->book_num)!=0&&a1->next!=NULL){
+    scanf("%s",bo);
+    while(strcmp(bo,a1->book_num)!=0&&a1->next!=NULL){
         a=a1;
         a1=a1->next;
     }
-    if(strcmp(a0->book_num,a1->book_num)==0){
+    if(strcmp(bo,a1->book_num)==0){
             E:
             printf("The number of this kind of books you want to remove:\n");
             scanf("%d",&t);
@@ -384,7 +382,7 @@ void removeB(){
             }
     }
     else{
-        printf("The book is not exist!");
+        printf("The book is not exist!\n");
     }
 printf("Remove books is finish!Press any key to continue...\n");
 getch();
@@ -408,10 +406,7 @@ void addS(){
         goto RL;
     }
     else{
-        printf("Please input the information of students:\n");
-        printf("The student's ID number:\n");
-        scanf("%s",a0->stud_num);
-        printf("The student's name:\n");
+        printf("Please input the student's name:\n");
         scanf("%s",a0->stud_nam);
         a0->a=0;
         strcpy(a0->borrow[0].borrow_fidate,"NULL");
@@ -556,7 +551,6 @@ void returnB(){
     a0=head_B;
     char stud[15];
     char book[15];
-    char date[15];
     printf("The return start:\n");
     printf("Please input your ID  number:\n");
     scanf("%s",stud);
